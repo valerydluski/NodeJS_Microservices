@@ -45,7 +45,7 @@ class ServiceRegistry {
     Object.keys(this.services).forEach((key) => {
       if (this.services[key].timestamp + this.timeout < now) {
         delete this.services[key];
-        this.log.debug(`Removed servicce ${key}`);
+        this.log.debug(`Removed service ${key}`);
       }
     });
   }
