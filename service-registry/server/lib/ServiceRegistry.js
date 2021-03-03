@@ -9,8 +9,9 @@ class ServiceRegistry {
 
   get(name, version) {
     this.cleanup();
-    const candidates = Object.values(this.services)
-      .filter(service => service.name === name && semver.satisfies(service.version, version));
+    const candidates = Object.values(this.services).filter(
+      (service) => service.name === name && semver.satisfies(service.version, version)
+    );
 
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
@@ -37,6 +38,7 @@ class ServiceRegistry {
   unregister(name, version, ip, port) {
     const key = name + version + ip + port;
     delete this.services[key];
+    this.log.debug(`Unregistered services ${name}, version ${version} at ${ip}:${port}`);
     return key;
   }
 
