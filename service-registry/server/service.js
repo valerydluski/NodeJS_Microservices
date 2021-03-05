@@ -2,7 +2,6 @@ const express = require('express');
 const ServiceRegistry = require('./lib/ServiceRegistry');
 
 const service = express();
-// const ServiceRegistry = require('./ServiceRegistry');
 
 module.exports = (config) => {
   const log = config.log();
@@ -19,6 +18,7 @@ module.exports = (config) => {
     const { servicename, serviceversion, serviceport } = req.params;
 
     const serviceip = req.connection.remoteAddress.includes('::') ? `[${req.connection.remoteAddress}]` : req.connection.remoteAddress;
+
     const serviceKey = serviceRegistry
       .register(servicename, serviceversion, serviceip, serviceport);
     return res.json({ result: serviceKey });
@@ -28,6 +28,7 @@ module.exports = (config) => {
     const { servicename, serviceversion, serviceport } = req.params;
 
     const serviceip = req.connection.remoteAddress.includes('::') ? `[${req.connection.remoteAddress}]` : req.connection.remoteAddress;
+
     const serviceKey = serviceRegistry
       .unregister(servicename, serviceversion, serviceip, serviceport);
     return res.json({ result: serviceKey });
