@@ -12,7 +12,7 @@ const app = express();
 const config = configs[app.get('env')];
 
 const speakers = new Speakers(config);
-const feedback = new Feedback(config.data.feedback);
+const feedback = new Feedback(config);
 
 app.set('view engine', 'pug');
 if (app.get('env') === 'development') {
@@ -20,6 +20,7 @@ if (app.get('env') === 'development') {
 }
 app.set('views', path.join(__dirname, './views'));
 app.locals.title = config.sitename;
+
 
 app.use(express.static('public'));
 
@@ -37,13 +38,10 @@ app.use(async (req, res, next) => {
   }
 });
 
-app.use(
-  '/',
-  routes({
-    speakers,
-    feedback,
-  })
-);
+app.use('/', routes({
+  speakers,
+  feedback,
+}));
 
 app.use((req, res, next) => next(createError(404, 'File not found')));
 

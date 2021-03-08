@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
 const axios = require('axios');
-
 const url = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -78,15 +77,15 @@ class SpeakersService {
 
   async callService(requestOptions) {
     const servicePath = url.parse(requestOptions.url).path;
-    const cacheKey = crypto
-      .createHash('md5')
-      .update(requestOptions.method + servicePath)
-      .digest('hex');
+    const cacheKey = crypto.createHash('md5').update(requestOptions.method + servicePath).digest('hex');
     let cacheFile = null;
+
     if (requestOptions.responseType && requestOptions.responseType === 'stream') {
       cacheFile = `${__dirname}/../../_imagecache/${cacheKey}`;
     }
+
     const result = await circuitBreaker.callService(requestOptions);
+
     if (!result) {
       if (this.cache[cacheKey]) return this.cache[cacheKey];
       if (cacheFile) {
@@ -102,14 +101,11 @@ class SpeakersService {
       const ws = fs.createWriteStream(cacheFile);
       result.pipe(ws);
     }
-
     return result;
   }
 
   async getService(servicename) {
-    const response = await axios.get(
-      `${this.serviceRegistryUrl}/find/${servicename}/${this.serviceVersionIdentifier}`
-    );
+    const response = await axios.get(`${this.serviceRegistryUrl}/find/${servicename}/${this.serviceVersionIdentifier}`);
     return response.data;
   }
 }
